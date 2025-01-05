@@ -1,0 +1,431 @@
+{
+	"info": {
+		"_postman_id": "a127f603-5e24-4858-bcd1-aac48ce31901",
+		"name": "API Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24034701"
+	},
+	"item": [
+		{
+			"name": "API Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Access token is not null\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.accessToken).to.not.be.null;\r",
+							"    pm.collectionVariables.set(\"accessToken\", response.accessToken);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Fungsi untuk menghasilkan string acak\r",
+							"function makeid(length) {\r",
+							"    let result = '';\r",
+							"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+							"    const charactersLength = characters.length;\r",
+							"    let counter = 0;\r",
+							"    while (counter < length) {\r",
+							"      result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+							"      counter += 1;\r",
+							"    }\r",
+							"    return result;\r",
+							"}\r",
+							"\r",
+							"// Membuat email acak\r",
+							"const randomString = makeid(10); // Panjang string acak sebelum @\r",
+							"const randomDomain = makeid(5) + \".com\"; // Domain acak\r",
+							"const randomEmail = randomString + \"@\" + randomDomain;\r",
+							"\r",
+							"// Menyimpan nama acak ke dalam variable\r",
+							"pm.variables.set(\"testerName\", randomString);\r",
+							"\r",
+							"// Menyimpan email ke dalam variable\r",
+							"pm.variables.set(\"testerEmail\", randomEmail);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"clientName\": \"{{testerName}}\",\n   \"clientEmail\": \"{{testerEmail}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api-clients/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api-clients",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message status is OK\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.status).to.eql(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/status",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify book details\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.id).to.eql(1);\r",
+							"    pm.expect(response.name).to.eql(\"The Russian\");\r",
+							"    pm.expect(response.author).to.eql(\"James Patterson and James O. Born\");\r",
+							"    pm.expect(response.isbn).to.eql(\"1780899475\");\r",
+							"    pm.expect(response.type).to.eql(\"fiction\");\r",
+							"    pm.expect(response.price).to.eql(12.98);\r",
+							"    pm.expect(response[\"current-stock\"]).to.eql(12);\r",
+							"    pm.expect(response.available).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Menyimpan orderId dari response\r",
+							"pm.test(\"Save order ID\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"orderId\", response.orderId);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"// Verify order creation\r",
+							"    pm.test(\"Verify order creation details\", () => {\r",
+							"        const response = pm.response.json();\r",
+							"        \r",
+							"        pm.expect(response.created).to.be.true;\r",
+							"        pm.expect(response.orderId).to.not.be.null;\r",
+							"        \r",
+							"        // Save for later use\r",
+							"        pm.collectionVariables.set(\"orderId\", response.orderId);\r",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate dynamic customer name\r",
+							"pm.variables.set(\"customerName\", \"Customer-\" + Date.now());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"bookId\": 1,\n  \"customerName\": \"{{customerName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check status code\r",
+							"    pm.test(\"Status code is 200\", () => {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"\r",
+							"// Check response time\r",
+							"    pm.test(\"Response time is less than 10000ms\", () => {\r",
+							"        pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"    });\r",
+							"\r",
+							"// Verify order details using only orderId\r",
+							"    pm.test(\"Verify order values are correct\", () => {\r",
+							"        const response = pm.response.json();\r",
+							"        const expectedOrderId = pm.collectionVariables.get(\"orderId\");\r",
+							"        \r",
+							"        // Basic verification that orderId matches\r",
+							"        pm.expect(response.id).to.eql(expectedOrderId);\r",
+							"        \r",
+							"        // Add existence checks for required fields\r",
+							"        pm.test(\"Order contains all required fields\", () => {\r",
+							"            pm.expect(response).to.have.property('id');\r",
+							"            pm.expect(response).to.have.property('bookId');\r",
+							"            pm.expect(response).to.have.property('customerName');\r",
+							"            \r",
+							"            // Verify data types\r",
+							"            pm.expect(response.bookId).to.be.a('number');\r",
+							"            pm.expect(response.customerName).to.be.a('string');\r",
+							"        });\r",
+							"        \r",
+							"        // Add non-null checks\r",
+							"        pm.test(\"Order fields are not null\", () => {\r",
+							"            pm.expect(response.bookId).to.not.be.null;\r",
+							"            pm.expect(response.customerName).to.not.be.null;\r",
+							"        });\r",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders/{{orderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" // Check status code\r",
+							"    pm.test(\"Status code is 204\", () => {\r",
+							"        pm.response.to.have.status(204);\r",
+							"    });\r",
+							"\r",
+							"// Check response time\r",
+							"    pm.test(\"Response time is less than 1000ms\", () => {\r",
+							"        pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders/{{orderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://simple-books-api.glitch.me",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "orderId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
