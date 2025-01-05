@@ -1,10 +1,7 @@
-# SanberCode Playground Boilerplate Repository
+# salman-api-automation
+Tugas API Automation Sanbercode
 
-## Description
-
-This repository is used for assignments reference of the Sanbercode Employee Program.
-
-## Installation
+# Installation
 
 1. Make sure you have Node.js and npm installed on your system. If not, you can download and install them from [here](https://nodejs.org/).
 
